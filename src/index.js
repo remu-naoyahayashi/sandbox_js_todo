@@ -1,109 +1,86 @@
-/**
- * テンプレート文字列
- */
-// const name = "じゃけぇ";
-// const age = 28;
+// import "styles.css";
 
-// const message = `私の名前は${name}です。年齢は${age}です。`;
-// console.log(message);
+const onClickAdd = () => {
+  //テキストボックスの値を取得し初期化する
+  const inputText = document.getElementById("add-text").value;
+  document.getElementById("add-text").value = "";
 
-/**
- * アロー関数
- */
-
-const func = (str) => {
-  return str;
+  createIncompleteList(inputText);
 };
 
-console.log(func("funcです"));
-
-/**
- * 分割代入
- */
-const myProfile = {
-  name: "nao",
-  age: "28"
+//未完了リストから指定の要素を削除する関数
+const deleteFromIncompleteList = (target) => {
+  document.getElementById("incomplete-list").removeChild(target);
 };
 
-// const message1 = `myname is ${myProfile.name}.And my age is ${myProfile.age}`;
-// console.log(message1);
+//未完了リストに追加する関数
+const createIncompleteList = (text) => {
+  //div生成
+  const div = document.createElement("div");
+  div.className = "list-row";
 
-const { name, age } = myProfile;
-const message2 = `myname is ${name}.And my age is ${age}`;
-console.log(message2);
+  //li生成
+  const li = document.createElement("li");
+  li.innerText = text;
 
-const myInfo = ["nao", 28];
+  //button（完了）生成
+  const completeButton = document.createElement("button");
+  completeButton.innerText = "完了";
+  completeButton.addEventListener("click", () => {
+    //押された完了ボタンの親タグ(div)を未完了リストから削除
+    deleteFromIncompleteList(completeButton.parentNode);
 
-const message3 = `myname is ${myInfo[0]}.And my age is ${myInfo[1]}`;
-console.log(message3);
+    //完了リストに追加する要素
+    const addTarget = completeButton.parentNode;
 
-const sayHello = (name = "nao") => console.log(`Hello!${name}!!`);
-sayHello();
+    //TODO内容テキストを取得
+    const text = addTarget.firstElementChild.innerText;
 
-/**
- * スプレッド構文
- */
+    //div以下を初期化
+    addTarget.textContent = null;
 
-// 配列の展開
-const arr1 = [1, 2];
+    //liタグ生成
+    const li = document.createElement("li");
+    li.innerText = text;
 
-console.log(arr1);
-console.log(...arr1);
+    //buttonタグ生成
+    const backButton = document.createElement("button");
+    backButton.innerText = "戻す";
+    backButton.addEventListener("click", () => {
+      //押された戻すボタンの親タグ（div）を完了リストから削除
+      const deleteTarget = backButton.parentNode;
+      document.getElementById("complete-list").removeChild(deleteTarget);
 
-const sumFunc = (num1, num2) => console.log(num1 + num2);
-sumFunc(...arr1);
+      //テキスト取得
+      const text = backButton.parentNode.firstElementChild.innerText;
+      createIncompleteList(text);
+    });
 
-const arr2 = [1, 2, 3, 4, 5];
-const [num1, num2, ...num3] = arr2;
+    //divタグの子要素に各要素を設定；
+    addTarget.appendChild(li);
+    addTarget.appendChild(backButton);
 
-console.log(num1);
-console.log(num2);
-console.log(num3);
+    //完了リストに追加
+    document.getElementById("complete-list").appendChild(addTarget);
+  });
 
-//配列のコピーや結合
-const arr3 = [10, 20];
-const arr4 = [30, 40];
+  //button（削除）生成
+  const deleteButton = document.createElement("button");
+  deleteButton.innerText = "削除";
+  deleteButton.addEventListener("click", () => {
+    //押された削除ボタンの親タグ(div)を未完了リストから削除
+    deleteFromIncompleteList(deleteButton.parentNode);
+  });
 
-const arr6 = [...arr3];
-console.log(arr6);
+  // divタグの子要素に各要素を設定
+  div.appendChild(li);
+  div.appendChild(completeButton);
+  div.appendChild(deleteButton);
 
-/**
- * mapやfilter
- */
-
-const nameArr = ["H", "K", "T"];
-
-// const nameArr2 = nameArr.map((name) => {
-//   return name;
-// });
-// console.log(nameArr2);
-
-nameArr.map((name) => console.log(name));
-
-const numArr = [1, 2, 3, 4, 5];
-
-const newNumArr = numArr.filter((num) => {
-  return num % 2 === 1;
-});
-console.log(newNumArr);
-
-/**
- * 三項演算子
- */
-// ある条件 ? 条件がtrueの時 : 条件がfalseの時
-
-const val1 = 1 < 0 ? "true" : "false";
-console.log(val1);
-
-const num = "a";
-// console.log(num.toLocaleString());
-
-const formattedNum =
-  typeof num === "number" ? num.toLocaleString() : "数値を入力してください";
-console.log(formattedNum);
-
-const checkSum = (num1, num2) => {
-  return num1 + num2 > 100 ? "100を超えています" : "許容範囲ないです";
+  //未完了のlistに追加
+  document.getElementById("incomplete-list").appendChild(div);
 };
 
-console.log(checkSum(500, 100));
+document
+  .getElementById("add-button")
+  .addEventListener("click", () => onClickAdd());
